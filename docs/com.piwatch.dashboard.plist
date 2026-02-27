@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.piwatch.dashboard</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <!-- Replace with your node path: run `which node` to find it -->
+        <string>/usr/local/bin/node</string>
+        <string>server.js</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <!-- Replace with your actual project path -->
+    <string>/path/to/piwatch/dashboard/.next/standalone</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>NODE_ENV</key>
+        <string>production</string>
+        <key>PORT</key>
+        <string>3100</string>
+        <key>HOSTNAME</key>
+        <string>0.0.0.0</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/path/to/piwatch/dashboard/logs/stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/path/to/piwatch/dashboard/logs/stderr.log</string>
+
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+</dict>
+</plist>

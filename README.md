@@ -8,7 +8,7 @@ Modern monitoring dashboard for Raspberry Pi fleets. Track CPU, memory, temperat
 
 - **Fleet Overview** — online/offline status, average metrics, alerts at a glance
 - **Real-time Monitoring** — CPU, RAM, temperature, disk, network via SSE
-- **Cron Jobs** — view all scheduled tasks across your Pi devices
+- **Cron Jobs** — view, toggle, and edit crontabs across all users
 - **Process Monitor** — top processes by CPU/memory usage
 - **Docker Containers** — container status (if Docker is installed)
 - **WiFi Management** — view and change WiFi settings remotely
@@ -29,7 +29,7 @@ Raspberry Pi (Agent)                 Mac/Server (Dashboard)
 | /cron /wifi /reboot |             | REST API             |
 +---------------------+             +---+------------------+
                                         |
-                                   Browser (localhost:3000)
+                                   Browser (localhost:3100)
 ```
 
 Pull-based model (Prometheus-style): the dashboard polls each Pi agent periodically.
@@ -41,7 +41,7 @@ Pull-based model (Prometheus-style): the dashboard polls each Pi agent periodica
 SSH into your Pi and run:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/YOUR_USER/piwatch/main/agent/install.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/soulduse/piwatch/main/agent/install.sh | sudo bash
 ```
 
 This will:
@@ -76,7 +76,7 @@ npm run build
 npm start
 ```
 
-Open http://localhost:3000
+Open http://localhost:3100
 
 ### 3. Add Your Devices
 
@@ -91,7 +91,8 @@ Open http://localhost:3000
 |----------|--------|------|-------------|
 | `/health` | GET | No | Hostname, uptime, version, IP |
 | `/metrics` | GET | No | CPU, RAM, disk, temp, network, processes, Docker |
-| `/cron` | GET | No | Cron job list from all sources |
+| `/cron` | GET | No | Cron jobs from all users and system |
+| `/cron` | POST | Yes | Update a user's crontab |
 | `/wifi` | GET | No | Current WiFi info (SSID, signal) |
 | `/wifi` | POST | Yes | Change WiFi settings (SSID, password) |
 | `/reboot` | POST | Yes | Reboot the device |
@@ -139,10 +140,33 @@ cd agent
 pip3 install psutil
 python3 -m piwatch_agent
 
-# Dashboard
+# Dashboard (dev server on port 3100)
 cd dashboard
 npm install
 npm run dev
+```
+
+## Run as macOS Service (launchd)
+
+To keep the dashboard running persistently across reboots:
+
+```bash
+# Build production bundle
+cd dashboard
+npm run build
+cp -r .next/static .next/standalone/.next/static
+cp -r public .next/standalone/public
+
+# Copy the plist (edit paths if needed)
+cp docs/com.piwatch.dashboard.plist ~/Library/LaunchAgents/
+
+# Start the service
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.piwatch.dashboard.plist
+
+# Useful commands
+launchctl kickstart -k gui/$(id -u)/com.piwatch.dashboard  # restart
+launchctl bootout gui/$(id -u)/com.piwatch.dashboard       # stop
+tail -f dashboard/logs/stdout.log                           # view logs
 ```
 
 ## License
