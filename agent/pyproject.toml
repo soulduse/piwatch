@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "piwatch-agent"
+version = "0.1.0"
+description = "Lightweight monitoring agent for Raspberry Pi"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+dependencies = [
+    "psutil>=5.9.0",
+]
+
+[project.scripts]
+piwatch-agent = "piwatch_agent.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["piwatch_agent*"]

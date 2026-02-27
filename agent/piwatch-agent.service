@@ -1,0 +1,18 @@
+[Unit]
+Description=PiWatch Monitoring Agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+EnvironmentFile=/etc/piwatch/agent.env
+ExecStart=/usr/bin/python3 -m piwatch_agent
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+MemoryMax=50M
+
+[Install]
+WantedBy=multi-user.target
