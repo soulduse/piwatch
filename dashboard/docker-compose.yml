@@ -1,0 +1,14 @@
+services:
+  dashboard:
+    build: .
+    ports:
+      - "3100:3100"
+    volumes:
+      - piwatch-data:/app/data
+    environment:
+      - NODE_ENV=production
+      - DATABASE_PATH=/app/data/piwatch.db
+    restart: unless-stopped
+
+volumes:
+  piwatch-data:
